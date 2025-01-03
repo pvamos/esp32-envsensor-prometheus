@@ -48,29 +48,13 @@ static esp_err_t sensor_data_handler(httpd_req_t *req) {
     // Generate Prometheus metrics
     char response[2048];
     int len = snprintf(response, sizeof(response),
-                       "# HELP bme280_raw_temperature Raw temperature from the BME280 sensor\n"
-                       "# TYPE bme280_raw_temperature gauge\n"
                        "bme280_raw_temperature %" PRId32 "\n"
-                       "# HELP bme280_raw_pressure Raw pressure from the BME280 sensor\n"
-                       "# TYPE bme280_raw_pressure gauge\n"
                        "bme280_raw_pressure %" PRId32 "\n"
-                       "# HELP bme280_raw_humidity Raw humidity from the BME280 sensor\n"
-                       "# TYPE bme280_raw_humidity gauge\n"
                        "bme280_raw_humidity %" PRId32 "\n"
-                       "# HELP bme280_compensated_temperature Compensated temperature from the BME280 sensor\n"
-                       "# TYPE bme280_compensated_temperature gauge\n"
                        "bme280_compensated_temperature %.2f\n"
-                       "# HELP bme280_compensated_pressure Compensated pressure from the BME280 sensor\n"
-                       "# TYPE bme280_compensated_pressure gauge\n"
                        "bme280_compensated_pressure %.4f\n"
-                       "# HELP bme280_compensated_humidity Compensated humidity from the BME280 sensor\n"
-                       "# TYPE bme280_compensated_humidity gauge\n"
                        "bme280_compensated_humidity %.4f\n"
-                       "# HELP tmp117_raw_temperature Raw temperature from the TMP117 sensor\n"
-                       "# TYPE tmp117_raw_temperature gauge\n"
                        "tmp117_raw_temperature %" PRId16 "\n"
-                       "# HELP tmp117_compensated_temperature Compensated temperature from the TMP117 sensor\n"
-                       "# TYPE tmp117_compensated_temperature gauge\n"
                        "tmp117_compensated_temperature %.4f\n",
                        raw_temp_bme280,
                        raw_pressure_bme280,
