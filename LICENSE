@@ -16,6 +16,10 @@ https://github.com/boschsensortec/BME280_SensorAPI/blob/master/LICENSE
 and in this repository in the `LICENSE_BME280` file.
 
 Bosch's `i2c.h` (C++) BME280 usage pattern has been re-implemented using ESP-IDF's `i2c_master.h` (C).
+This reimplementation is an independent work and does not include any direct copying
+of the vendor's original source code, and it is distributed under the terms of the MIT License.
+
+Bosch Sensortec retains the copyright to the original BME280 Sensor API sample code.
 
 
 This software's Texas Instruments TMP117 sensor handling is based on SparkFun TMP117 Arduino Library
@@ -27,6 +31,22 @@ https://github.com/sparkfun/SparkFun_TMP117_Arduino_Library/blob/master/LICENSE.
 and in this repository in the `LICENSE_TMP117` file.
 
 SparkFun's `i2c.h` (C++) TMP117 I2C usage pattern has been re-implemented using ESP-IDF's `i2c_master.h` (C).
+This reimplementation is an independent work and does not include any direct copying
+of the vendor's original source code, and it is distributed under the terms of the MIT License.
+
+SparkFun Electronics retains the copyright to the original SparkFun TMP117 Arduino Library sample code.
+
+
+This software includes a reimplementation of communication patterns for the AHT20 temperature and humidity Sensor,
+based on concepts and methods published in the sample code provided by Guangzhou Aosong Electronics Co., Ltd. for STM32 microcontrollers.
+
+The original sample code can be accessed via: the vendor's product page: http://www.aosong.com/en/products-32.html
+and sample code (RAR archive) download link: http://aosong.com/userfiles/files/software/AHT20-21%20DEMO%20V1_3(1).rar
+
+This reimplementation is an independent work and does not include any direct copying
+of the vendor's original source code, and it is distributed under the terms of the MIT License.
+
+Guangzhou Aosong Electronics Co., Ltd. retains the copyright to the original sample code.
 
 
 This software also uses the ESP-IDF framework,
@@ -37,9 +57,13 @@ ESP-IDF is distributed under the Apache License 2.0, which is included in the or
 https://github.com/espressif/esp-idf/blob/master/LICENSE
 and in this repository in the `LICENSE_ESP-IDF` file.
 
+The parts of the ESP-IDF framework's code is used for building my own work.
 
-This version includes modifications and re-implementation by Péter Vámos in 2024, published and available at:
-https://github.com/pvamos/esp32-prometheus-bme280-tmp117
+Espressif Systems (Shanghai) Co. Ltd. retains the copyright to the original ESP-IDF framework.
+
+
+This version includes extensions, modifications and re-implementation by Péter Vámos in 2024, published and available at:
+https://github.com/pvamos/esp-envsensor-prometheus
 
 
 I publish my own work under the MIT License.

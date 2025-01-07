@@ -37,7 +37,7 @@ esp_err_t tmp117_read_raw(int16_t *raw_temperature) {
 
     *raw_temperature = (int16_t)((temp_data[0] << 8) | temp_data[1]);
 
-    ESP_LOGI(TAG, "TMP117 raw temperature read: %" PRId16, *raw_temperature);
+    ESP_LOGI(TAG, "TMP117 RAW Temperature: %" PRId16, *raw_temperature);
 
     return ESP_OK;
 }
@@ -45,7 +45,7 @@ esp_err_t tmp117_read_raw(int16_t *raw_temperature) {
 // Convert raw temperature to Celsius
 esp_err_t tmp117_calculate_compensated(int16_t raw_temperature, float *compensated_temperature) {
     *compensated_temperature = raw_temperature * 0.0078125f; // TMP117 resolution is 0.0078125°C per LSB
-    ESP_LOGI(TAG, "TMP117 compensated temperature: %.4f°C", *compensated_temperature);
+    ESP_LOGI(TAG, "TMP117 Temperature: %.4f °C", *compensated_temperature);
 
     return ESP_OK;
 }

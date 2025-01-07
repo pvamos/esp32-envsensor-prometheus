@@ -3,6 +3,7 @@
 #include "esp_http_server.h"
 #include "bme280.h"
 #include "tmp117.h"
+#include "aht20.h"
 #include <inttypes.h> // For PRI macros
 #include <stdlib.h>
 
@@ -12,8 +13,9 @@ static const char *TAG = "HTTPD";
 static esp_err_t sensor_data_handler(httpd_req_t *req) {
     int32_t raw_temp_bme280, raw_pressure_bme280, raw_humidity_bme280;
     int16_t raw_temp_tmp117;
+    int32_t raw_temp_aht20, raw_humidity_aht20;
     float compensated_temp_bme280, compensated_pressure_bme280, compensated_humidity_bme280;
-    float compensated_temp_tmp117;
+    float compensated_temp_tmp117, compensated_temp_aht20, compensated_humidity_aht20;
 
     // Read raw data from BME280
     if (bme280_read_raw(&raw_temp_bme280, &raw_pressure_bme280, &raw_humidity_bme280) != ESP_OK) {
@@ -45,6 +47,20 @@ static esp_err_t sensor_data_handler(httpd_req_t *req) {
         return ESP_FAIL;
     }
 
+    // Read raw data from AHT20
+    if (aht20_read_raw(&raw_temp_aht20, &raw_humidity_aht20) != ESP_OK) {
+        ESP_LOGE(TAG, "Failed to read raw data from AHT20");
+        httpd_resp_send_500(req);
+        return ESP_FAIL;
+    }
+
+    // Calculate compensated data for AHT20
+    if (aht20_calculate(raw_temp_aht20, raw_humidity_aht20, &compensated_temp_aht20, &compensated_humidity_aht20) != ESP_OK) {
+        ESP_LOGE(TAG, "Failed to calculate compensated data for AHT20");
+        httpd_resp_send_500(req);
+        return ESP_FAIL;
+    }
+
     // Generate Prometheus metrics
     char response[2048];
     int len = snprintf(response, sizeof(response),
@@ -53,9 +69,13 @@ static esp_err_t sensor_data_handler(httpd_req_t *req) {
                        "bme280_raw_humidity %" PRId32 "\n"
                        "bme280_compensated_temperature %.2f\n"
                        "bme280_compensated_pressure %.4f\n"
-                       "bme280_compensated_humidity %.4f\n"
+                       "bme280_compensated_humidity %.3f\n"
                        "tmp117_raw_temperature %" PRId16 "\n"
-                       "tmp117_compensated_temperature %.4f\n",
+                       "tmp117_compensated_temperature %.4f\n"
+                       "aht20_raw_temperature %" PRId32 "\n"
+                       "aht20_raw_humidity %" PRId32 "\n"
+                       "aht20_compensated_temperature %.2f\n"
+                       "aht20_compensated_humidity %.3f\n",
                        raw_temp_bme280,
                        raw_pressure_bme280,
                        raw_humidity_bme280,
@@ -63,7 +83,11 @@ static esp_err_t sensor_data_handler(httpd_req_t *req) {
                        compensated_pressure_bme280,
                        compensated_humidity_bme280,
                        raw_temp_tmp117,
-                       compensated_temp_tmp117);
+                       compensated_temp_tmp117,
+                       raw_temp_aht20,
+                       raw_humidity_aht20,
+                       compensated_temp_aht20,
+                       compensated_humidity_aht20);
 
     if (len < 0 || len >= sizeof(response)) {
         ESP_LOGE(TAG, "Response buffer too small or formatting error occurred.");
@@ -110,6 +134,7 @@ esp_err_t http_server_start() {
     ESP_ERROR_CHECK(httpd_start(&server, &config));
     ESP_ERROR_CHECK(httpd_register_uri_handler(server, &sensor_data_uri));
     ESP_ERROR_CHECK(httpd_register_uri_handler(server, &catch_all_uri));
+
     ESP_LOGI(TAG, "HTTP server started successfully");
 
     return ESP_OK;

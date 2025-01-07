@@ -115,7 +115,7 @@ esp_err_t bme280_read_raw(int32_t *temperature, int32_t *pressure, int32_t *humi
     *temperature = (int32_t)((data[3] << 12) | (data[4] << 4) | (data[5] >> 4));
     *humidity = (int32_t)((data[6] << 8) | data[7]);
 
-    ESP_LOGI(TAG, "BME280 raw data read: Temp=%" PRId32 ", Pressure=%" PRId32 ", Humidity=%" PRId32, 
+    ESP_LOGI(TAG, "BME280 RAW Temperature: %" PRId32 ", Pressure: %" PRId32 ", Humidity: %" PRId32, 
              *temperature, *pressure, *humidity);
     return ESP_OK;
 }
@@ -168,7 +168,7 @@ esp_err_t bme280_calculate_compensated(int32_t temp_raw, int32_t press_raw, int3
     v_x1_u32r = (v_x1_u32r > 419430400 ? 419430400 : v_x1_u32r);
     *hum_final = (v_x1_u32r >> 12) / 1024.0f;
 
-    ESP_LOGI(TAG, "BME280 compensated data: Temp=%.2f°C, Pressure=%.4f hPa, Humidity=%.4f%%",
+    ESP_LOGI(TAG, "BME280 Temperature: %.2f °C, Pressure: %.4f hPa, Humidity %.3f %%RH",
          (double)*temp_final, (double)*press_final, (double)*hum_final);
     
     return ESP_OK;
